@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MQTT Data</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <h1>Datos Recibidos de MQTT</h1>
+    <table id="data-table" border="1">
+        <thead>
+            <tr>
+                <th>Timestamp</th>
+                <th>Mensaje</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Los datos se insertarán aquí automáticamente -->
+        </tbody>
+    </table>
+
+    <script>
+        function fetchData() {
+            // Realizar la petición AJAX al backend
+            $.ajax({
+                url: "{% url 'get_data' %}",  // URL para obtener los datos en JSON
+                method: "GET",
+                success: function(response) {
+                    // Limpiar la tabla antes de agregar los nuevos datos
+                    $('#data-table tbody').empty();
+                    
+                    // Recorrer los datos y agregarlos a la tabla
+                    response.data.forEach(function(item) {
+                        const row = `<tr>
+                                        <td>${item.timestamp}</td>
+                                        <td>${item.message}</td>
+                                     </tr>`;
+                        $('#data-table tbody').append(row);
+                    });
+                }
+            });
+        }
+
+        // Llamar a fetchData cada 5 segundos
+        setInterval(fetchData, 5000);
+
+        // Cargar los datos al cargar la página
+        fetchData();
+    </script>
+</body>
+</html>
